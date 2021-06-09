@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 import React, { useState, useEffect } from 'react'
+const JSON_API = 'https://react-task-tutorial.herokuapp.com//api';
 
 // 55:45
 function App() {
@@ -18,7 +19,7 @@ function App() {
   }, [])
   
   const fetchTasks = async () => {
-      const res = await fetch('https://react-task-tutorial.herokuapp.com/tasks')
+      const res = await fetch(`${JSON_API}/tasks`)
       const data = await res.json();
       return data;
     }
@@ -28,7 +29,7 @@ function App() {
   }
 
   const addTask = async (task) => {
-    const res = await fetch('https://react-task-tutorial.herokuapp.com/tasks', {
+    const res = await fetch(`${JSON_API}/tasks`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
@@ -41,7 +42,7 @@ function App() {
 
 
   const deleteTask = async (id) => {
-    await fetch(`https://react-task-tutorial.herokuapp.com/tasks/${id}`, {
+    await fetch(`${JSON_API}/tasks/${id}`, {
       method:'DELETE'
     })
     setTasks(tasks.filter((task) => task.id !== id));
