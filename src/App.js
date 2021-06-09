@@ -1,5 +1,8 @@
 import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Header from './components/Header'
+import Footer from './components/Footer'
+import About from './components/About'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 import React, { useState, useEffect } from 'react'
@@ -17,13 +20,13 @@ function App() {
     }
     getTasks();
   }, [])
-  
+
   const fetchTasks = async () => {
-      const res = await fetch(`${JSON_API}/tasks`)
-      const data = await res.json();
-      return data;
-    }
-  
+    const res = await fetch(`${JSON_API}/tasks`)
+    const data = await res.json();
+    return data;
+  }
+
   const toggleAdd = () => {
     setShowAdd(!showAdd)
   }
@@ -43,23 +46,51 @@ function App() {
 
   const deleteTask = async (id) => {
     await fetch(`${JSON_API}/tasks/${id}`, {
-      method:'DELETE'
+      method: 'DELETE'
     })
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
-  const toggleReminder =  (id) => {
-    setTasks(tasks.map(task => task.id === id ? { ...task, reminder: 
-    !task.reminder} : task))
+  const toggleReminder = async (id) => {
+    const taskToToggle = await fetchTask(id);
+    const updatedTask = { ...taskToToggle, reminder: taskToToggle.reminder };
+    const res = await fetch(`${JSON_API}/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    })
+    const data = await res.json();
+    setTasks(tasks.map(task => task.id === id ? {
+      ...task, reminder:
+        !data.reminder
+    } : task))
   }
+
+  const fetchTask = async (id) => {
+    const res = await fetch(`${JSON_API}/tasks/${id}`)
+    const data = await res.json();
+    return data;
+  }
+
   return (
-    <div className='container'>
-      <Header title='Task Tracker' toggleAdd={toggleAdd} showAdd={showAdd} />
-      {showAdd && <AddTask onAdd={addTask}/>}
-      {tasks.length === 0 ? 
-      <h3>No task</h3> : 
-      <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> }
-    </div>
+    <Router>
+      <div className='container'>
+        <Header title='Task Tracker' toggleAdd={toggleAdd} showAdd={showAdd} />
+        <Route path='/' exact render={(props) => (
+          <>
+            {showAdd && <AddTask onAdd={addTask} />}
+            {tasks.length === 0 ?
+              <h3>No task</h3> :
+              <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />}
+
+          </>
+        )} />
+        <Route path='/about' component={About} />
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
