@@ -3,7 +3,7 @@ import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 import React, { useState, useEffect } from 'react'
-const JSON_API = 'https://react-task-tutorial.herokuapp.com//api';
+const JSON_API = 'https://react-task-tutorial.herokuapp.com/api';
 
 // 55:45
 function App() {
