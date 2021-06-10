@@ -79,13 +79,12 @@ function App() {
       <div className='container'>
         <Header title='Task Tracker' toggleAdd={toggleAdd} showAdd={showAdd} />
         <Route path='/' exact render={(props) => (
-          <>
+          <div>
             {showAdd && <AddTask onAdd={addTask} />}
             {tasks.length === 0 ?
-              <h3>No task</h3> :
-              <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />}
-
-          </>
+              (<h3>No task</h3>) :
+              (<Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />)}
+          </div>
         )} />
         <Route path='/about' component={About} />
         <Footer />
