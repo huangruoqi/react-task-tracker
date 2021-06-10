@@ -53,7 +53,7 @@ function App() {
 
   const toggleReminder = async (id) => {
     const taskToToggle = await fetchTask(id);
-    const updatedTask = { ...taskToToggle, reminder: taskToToggle.reminder };
+    const updatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
     const res = await fetch(`${JSON_API}/tasks/${id}`, {
       method: 'PUT',
       headers: {
@@ -64,7 +64,7 @@ function App() {
     const data = await res.json();
     setTasks(tasks.map(task => task.id === id ? {
       ...task, reminder:
-        !data.reminder
+        data.reminder
     } : task))
   }
 
